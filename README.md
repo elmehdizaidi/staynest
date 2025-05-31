@@ -40,7 +40,7 @@ StayNest est une application web de gestion et réservation immobilière dévelo
   - Ajout d’images via upload (stockées dans `/storage/app/public`)
   - Style modernisé avec colonnes professionnelles
 - Gestion des réservations (`BookingResource`)
-  - Statuts, détails utilisateur, dates, etc.
+  -  détails utilisateur, dates.
 - Sécurité d’accès au panneau (`is_admin`)
 
 ---
@@ -56,7 +56,29 @@ StayNest est une application web de gestion et réservation immobilière dévelo
 | bookings     | Réservations liées aux propriétés   |
 
 > Assure-toi d’avoir un champ `is_admin` dans la table `users` (`boolean`, `default: false`).
+#### Exemple de migration pour les tables :
 
+```php
+// Table properties
+Schema::create('properties', function (Blueprint $table) {
+    $table->id();
+    $table->string('name');
+    $table->text('description');
+    $table->decimal('price_per_night', 8, 2);
+    $table->string('photo'); 
+    $table->timestamps();
+});
+
+// Table bookings
+Schema::create('bookings', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('property_id')->constrained()->onDelete('cascade');
+    $table->date('start_date');
+    $table->date('end_date');
+    $table->timestamps();
+});
+📸 Le champ photo permet d’associer une image à chaque bien immobilier.
 ---
 
 ## ⚙️ Installation du projet
